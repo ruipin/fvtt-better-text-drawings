@@ -3,6 +3,8 @@
 
 'use strict';
 
+import {libWrapper} from './shim.js';
+
 Hooks.on('setup', () => {
 	const MODULE_NAME = "Better Text Drawings";
 	const MODULE_ID = "better-text-drawings";
@@ -87,12 +89,9 @@ Hooks.on('setup', () => {
 
 	//---------------------------
 	//
-	new ResilientWrapper(Drawing.prototype, '_createText', function(wrapped, ...args) {
+	libWrapper.register(MODULE_ID, 'Drawing.prototype._createText', function(wrapped, ...args) {
 		// Get values
 		let values = getTextOptions(this.data);
-
-		if(values.isDefault)
-			return wrapped.apply(this, args);
 
 
 		// We need to draw the drawing ourselves --- copied and modified from foundry.js Drawing.prototype._createText
@@ -120,10 +119,10 @@ Hooks.on('setup', () => {
 
 		// Create the text container
 		return new PIXI.Text(this.data.text, textStyle);
-	});
+	}, 'OVERRIDE');
 
 
-	new ResilientWrapper(Drawing.prototype, '_onUpdate', function(wrapped, ...args) {
+	libWrapper.register(MODULE_ID, 'Drawing.prototype._onUpdate', function(wrapped, ...args) {
 		let data = args[0];
 
 		// if flags were touched, touch 'type' to force a redraw
@@ -131,6 +130,6 @@ Hooks.on('setup', () => {
 			data['type'] = data['type'] ?? this.data.type;
 
 		return wrapped.apply(this, args);
-	});
+	}, 'WRAPPER');
 });
 
