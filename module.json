@@ -2,7 +2,7 @@
 	"name": "better-text-drawings",
 	"title": "Better Text Drawings",
 	"description": "Adds more options to text drawings, allowing multi-line text as well as configurable stroke width, color, and text alignment.",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"author": "Rui Pinheiro",
 	"esmodules": ["better-text-drawings.js"],
 	"minimumCoreVersion": "0.6.5",
