@@ -93,32 +93,34 @@ Hooks.on('setup', () => {
 		// Get values
 		let values = getTextOptions(this.data);
 
-
 		// We need to draw the drawing ourselves --- copied and modified from foundry.js Drawing.prototype._createText
 		if ( this.text && !this.text._destroyed ) {
 			this.text.destroy();
 			this.text = null;
 		}
 		const isText = this.data.type === CONST.DRAWING_TYPES.TEXT;
+		const stroke = Math.max(Math.round(this.data.fontSize / 32), 2);
 
+		// Define the text style
 		const textStyle = new PIXI.TextStyle({
-		  fontFamily: this.data.fontFamily || CONFIG.defaultFontFamily,
-		  fontSize: this.data.fontSize,
-		  fill: this.data.textColor || "#FFFFFF",
-		  stroke: values.textStrokeColor,
-		  strokeThickness: values.textStrokeWidth,
-		  dropShadow: true,
-		  dropShadowColor: "#000000",
-		  dropShadowBlur: Math.max(Math.round(this.data.fontSize / 16), 2),
-		  dropShadowAngle: 0,
-		  dropShadowDistance: 0,
-		  align: values.textAlignment,
-		  wordWrap: !isText,
-		  wordWrapWidth: 1.5 * this.data.width
+			fontFamily: this.data.fontFamily || CONFIG.defaultFontFamily,
+			fontSize: this.data.fontSize,
+			fill: this.data.textColor || "#FFFFFF",
+			stroke: values.textStrokeColor,
+			strokeThickness: stroke,
+			dropShadow: true,
+			dropShadowColor: "#000000",
+			dropShadowBlur: Math.max(Math.round(this.data.fontSize / 16), 2),
+			dropShadowAngle: 0,
+			dropShadowDistance: 0,
+			align: values.textAlignment,
+			wordWrap: !isText,
+			wordWrapWidth: 1.5 * this.data.width,
+			padding: stroke
 		});
 
 		// Create the text container
-		return new PIXI.Text(this.data.text, textStyle);
+		return new PreciseText(this.data.text, textStyle);
 	}, 'OVERRIDE');
 
 

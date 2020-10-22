@@ -1,3 +1,9 @@
+# 1.0.3 (2020-09-22)
+
+* Add compatibility for Foundry 0.7.5.
+* Text no longer looks blurry. Fixes [#1](https://github.com/ruipin/fvtt-better-text-drawings/issues/1).
+* **Note:** No longer officially supports 0.6.x.
+
 # 1.0.2 (2020-09-17)
 
 * Update libWrapper shim due to an upstream bug-fix.
