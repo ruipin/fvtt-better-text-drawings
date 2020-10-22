@@ -99,7 +99,6 @@ Hooks.on('setup', () => {
 			this.text = null;
 		}
 		const isText = this.data.type === CONST.DRAWING_TYPES.TEXT;
-		const stroke = Math.max(Math.round(this.data.fontSize / 32), 2);
 
 		// Define the text style
 		const textStyle = new PIXI.TextStyle({
@@ -107,7 +106,7 @@ Hooks.on('setup', () => {
 			fontSize: this.data.fontSize,
 			fill: this.data.textColor || "#FFFFFF",
 			stroke: values.textStrokeColor,
-			strokeThickness: stroke,
+			strokeThickness: values.textStrokeWidth,
 			dropShadow: true,
 			dropShadowColor: "#000000",
 			dropShadowBlur: Math.max(Math.round(this.data.fontSize / 16), 2),
@@ -116,7 +115,7 @@ Hooks.on('setup', () => {
 			align: values.textAlignment,
 			wordWrap: !isText,
 			wordWrapWidth: 1.5 * this.data.width,
-			padding: stroke
+			padding: values.textStrokeWidth
 		});
 
 		// Create the text container

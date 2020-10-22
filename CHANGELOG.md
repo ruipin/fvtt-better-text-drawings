@@ -1,3 +1,7 @@
+# 1.0.4 (2020-09-22)
+
+* Fix stroke width option, which was broken after the update to Foundry 0.7.5.
+
 # 1.0.3 (2020-09-22)
 
 * Add compatibility for Foundry 0.7.5.
