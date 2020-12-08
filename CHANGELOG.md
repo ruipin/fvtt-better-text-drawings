@@ -1,3 +1,8 @@
+# 1.0.4.3 (2020-12-08)
+
+* No code changes.
+* Explicitly announce compatibility with Foundry 0.7.8.
+
 # 1.0.4.2 (2020-11-15)
 
 * No code changes.
