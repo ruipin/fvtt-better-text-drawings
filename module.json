@@ -2,11 +2,11 @@
 	"name": "better-text-drawings",
 	"title": "Better Text Drawings",
 	"description": "Adds more options to text drawings, allowing multi-line text as well as configurable stroke width, color, and text alignment.",
-	"version": "1.0.4.3",
+	"version": "1.0.4.4",
 	"author": "Rui Pinheiro",
 	"esmodules": ["better-text-drawings.js"],
 	"minimumCoreVersion": "0.7.5",
-	"compatibleCoreVersion": "0.7.8",
+	"compatibleCoreVersion": "0.7.9",
 	"url": "https://github.com/ruipin/fvtt-better-text-drawings",
 	"manifest": "https://github.com/ruipin/fvtt-better-text-drawings/releases/latest/download/module.json",
 	"download": "https://github.com/ruipin/fvtt-better-text-drawings/archive/master.zip"
