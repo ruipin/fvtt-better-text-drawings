@@ -52,7 +52,12 @@ Hooks.on('setup', () => {
 
 		// Make textInput a text area
 		let textInput = html.find('input[name="text"]');
-		let textArea = $('<textarea name="text" data-dtype="String"></textarea>');
+		let parentWindow = textInput.parent().parent().parent().parent().parent();
+		let newwheight=parentWindow.height()+70;
+        parentWindow.height(newwheight);
+		console.log("parentWindow");
+		console.log(parentWindow);
+		let textArea = $('<textarea name="text" data-dtype="String" rows="4"></textarea>');
 
 		textArea.val(data.object.text);
 		textInput.replaceWith(textArea);
@@ -133,4 +138,3 @@ Hooks.on('setup', () => {
 		return wrapped.apply(this, args);
 	}, 'WRAPPER');
 });
-
