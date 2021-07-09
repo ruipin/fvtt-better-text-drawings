@@ -18,6 +18,7 @@ jobs:
       - name: Prepare Environment
         id: prepare_env
         run: |
+          # Calculate project information
           PROJECT="${GITHUB_REPOSITORY#ruipin/}"
           PROJECT_NO_FVTT="${PROJECT#fvtt-}"
 
@@ -26,6 +27,9 @@ jobs:
 
           echo ::set-output name=PROJECT::${PROJECT}
           echo ::set-output name=PROJECT_NO_FVTT::${PROJECT_NO_FVTT}
+
+          # Calculate version information
+          GIT_HASH="$(git rev-parse HEAD)"
 
           VERSION="${GITHUB_REF#refs/*/v}"
           SPLIT_VERSION_1="${VERSION#*.}"
@@ -43,12 +47,14 @@ jobs:
             git merge-base --is-ancestor HEAD origin/master && IS_PRERELEASE="false"
           fi
 
+          # Store environment
           echo ::set-output name=VERSION::${VERSION}
           echo ::set-output name=MAJOR_VERSION::${MAJOR_VERSION}
           echo ::set-output name=MINOR_VERSION::${MINOR_VERSION}
           echo ::set-output name=PATCH_VERSION::${PATCH_VERSION}
           echo ::set-output name=SUFFIX_VERSION::${SUFFIX_VERSION}
           echo ::set-output name=IS_PRERELEASE::${IS_PRERELEASE}
+          echo ::set-output name=GIT_HASH::${GIT_HASH}
 
           echo "VERSION=${VERSION}"               >> $GITHUB_ENV
           echo "MAJOR_VERSION=${MAJOR_VERSION}"   >> $GITHUB_ENV
@@ -56,10 +62,12 @@ jobs:
           echo "PATCH_VERSION=${PATCH_VERSION}"   >> $GITHUB_ENV
           echo "SUFFIX_VERSION=${SUFFIX_VERSION}" >> $GITHUB_ENV
           echo "IS_PRERELEASE=${IS_PRERELEASE}"   >> $GITHUB_ENV
+          echo "GIT_HASH=${GIT_HASH}"             >> $GITHUB_ENV
 
-          echo "Project: '$PROJECT' ; Version: '$VERSION' ; Major: '$MAJOR_VERSION' ; Minor: '$MINOR_VERSION' ; Patch: '$PATCH_VERSION' ; Suffix: '$SUFFIX_VERSION' ; Pre-release: '$IS_PRERELEASE' ;"
+          echo "Project: '$PROJECT' ; Version: '$VERSION' ; Major: '$MAJOR_VERSION' ; Minor: '$MINOR_VERSION' ; Patch: '$PATCH_VERSION' ; Suffix: '$SUFFIX_VERSION' ; Hash: '$GIT_HASH' ; Pre-release: '$IS_PRERELEASE' ;"
 
-          if ! grep "\"$VERSION\"" module.json ; then
+          # Sanity check
+          if ! grep "\"${VERSION}\"" module.json ; then
             echo "module.json version does not match the tag"
             exit 1
           fi
@@ -69,13 +77,27 @@ jobs:
 
       - name: Build
         run: |
+          mkdir -p "dist"
+          cp *.md "LICENSE" dist/
+          [[ -d "templates" ]] && cp -r templates dist/templates
 
-          sed -r -i \
-            -e 's~("manifest":)[^,]*~\1 "https://github.com/ruipin/${{ steps.prepare_env.outputs.PROJECT }}/releases/latest/download/module.json"~' \
-            -e 's~("download":)[^,]*~\1 "https://github.com/ruipin/${{ steps.prepare_env.outputs.PROJECT }}/releases/download/v${{ steps.prepare_env.outputs.VERSION }}/${{ steps.prepare_env.outputs.PROJECT_NO_FVTT }}-v${{ steps.prepare_env.outputs.VERSION }}.zip"~' \
-            module.json
+          MANIFEST_EDITS=()
+          function add_manifest_edit {
+            MANIFEST_EDITS+=('-e' 's~(["'"'"']'"$1"'["'"'"'][[:space:]]*:).*[^,[:space:]](,?)[[:space:]]*$~\1 '"$2"'\2~')
+          }
 
-          7z a -tzip "${{ steps.prepare_env.outputs.PROJECT_NO_FVTT }}-v${{ steps.prepare_env.outputs.VERSION }}.zip" * -mx0
+          add_manifest_edit 'git_version' '"${{ steps.prepare_env.outputs.GIT_HASH }}"'
+          add_manifest_edit 'manifest' '"https://github.com/ruipin/${{ steps.prepare_env.outputs.PROJECT }}/releases/latest/download/module.json"'
+          add_manifest_edit 'download' '"https://github.com/ruipin/${{ steps.prepare_env.outputs.PROJECT }}/releases/download/v${{ steps.prepare_env.outputs.VERSION }}/${{ steps.prepare_env.outputs.PROJECT_NO_FVTT }}-v${{ steps.prepare_env.outputs.VERSION }}.zip"'
+
+          sed -r \
+            "${MANIFEST_EDITS[@]}" \
+            module.json > dist/module.json
+
+          cd dist
+          7z a -tzip "../${{ steps.prepare_env.outputs.PROJECT_NO_FVTT }}-v${{ steps.prepare_env.outputs.VERSION }}.zip" "." -mx0
+          cd ..
+          cp dist/module.json "module.json"
 
 
       - name: Create/Upload Zip

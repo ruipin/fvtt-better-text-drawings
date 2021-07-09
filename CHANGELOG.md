@@ -1,3 +1,11 @@
+# 1.1.0.0 (2021-07-09)
+
+- Enlarge the text area and Drawing Config window slightly.
+  - Merges pull request [#7](https://github.com/ruipin/fvtt-better-text-drawings/pull/7). Thanks to [@zarmstrong](https://github.com/zarmstrong) for their contribution, the first ever for this project!
+- Update libWrapper shim to latest version.
+- Explicitly announce compatibility with Foundry 0.8.8.
+- Tweak release workflow.
+
 # 1.0.5.0 (2021-05-24)
 
 - Update libWrapper shim to latest version.

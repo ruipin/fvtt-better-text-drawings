@@ -20,7 +20,7 @@ Hooks.on('setup', () => {
 	function getTextOptions(drawing_data) {
 		const isText = drawing_data.type === CONST.DRAWING_TYPES.TEXT;
 
-		let result = {
+		const result = {
 			textAlignment  : isText ? "left" : "center", // see foundry.js Drawing.prototype._createText
 			textStrokeColor: DEFAULT_STROKE_COLOR,
 			textStrokeWidth: DEFAULT_STROKE_WIDTH,
@@ -28,10 +28,10 @@ Hooks.on('setup', () => {
 		};
 
 		if(drawing_data.flags && drawing_data.flags[MODULE_ID]) {
-			let flags = drawing_data.flags[MODULE_ID];
+			const flags = drawing_data.flags[MODULE_ID];
 
-			for(let flag of ['textAlignment', 'textStrokeColor', 'textStrokeWidth']) {
-				let newValue = flags[flag];
+			for(const flag of ['textAlignment', 'textStrokeColor', 'textStrokeWidth']) {
+				const newValue = flags[flag];
 
 				if(typeof newValue !== 'undefined' && newValue != result[flag]) {
 					result[flag] = newValue;
@@ -48,22 +48,18 @@ Hooks.on('setup', () => {
 	// Hook the drawing settings window
 	Hooks.on('renderDrawingConfig', (app, html, data) => {
 		// Get values
-		let values = getTextOptions(data.object);
-
-		//resize window
-		let thisAppID=app.appId;
-		let newwheight=$('#drawing-config[data-appid="'+app.appId+'"]').height()+70;
-		$('#drawing-config[data-appid="'+app.appId+'"]').height(newwheight);
+		const values = getTextOptions(data.object);
 
 		// Make textInput a text area
-		let textInput = html.find('input[name="text"]');
-		let textArea = $('<textarea name="text" data-dtype="String" rows="4"></textarea>');
+		const textInput = html.find('input[name="text"]');
+		const textArea = $('<textarea name="text" data-dtype="String" rows="4"></textarea>');
 
 		textArea.val(data.object.text);
 		textInput.replaceWith(textArea);
 
 		// Allow us to choose the text Stroke color/width and alignment
-		let textTab = html.find('div.tab[data-tab="text"]');
+		const textTab = html.find('div.tab[data-tab="text"]');
+
 		$(`
 			<div class="form-group">
 				<label for="flags.${MODULE_ID}.textAlignment">Text Alignment</label>
@@ -88,15 +84,22 @@ Hooks.on('setup', () => {
 	});
 
 
-	// TODO: Wrap DrawingConfig.defaultProperties to increase the default window height
-	//       Not done right now as neither ResilientWrapper nor libWrapper support wrapping properties, but it is planned
+	//---------------------------
+	// Resize text drawings window
+	//
+	libWrapper.register(MODULE_ID, 'DrawingConfig.defaultOptions', function(wrapped, ...args) {
+		const res = wrapped(...args);
+		res.height += 70;
+		return res;
+	}, 'WRAPPER');
 
 
 	//---------------------------
+	// Override Foundry Text Drawing functionality
 	//
 	libWrapper.register(MODULE_ID, 'Drawing.prototype._createText', function(wrapped, ...args) {
 		// Get values
-		let values = getTextOptions(this.data);
+		const values = getTextOptions(this.data);
 
 		// We need to draw the drawing ourselves --- copied and modified from foundry.js Drawing.prototype._createText
 		if ( this.text && !this.text._destroyed ) {
@@ -129,7 +132,7 @@ Hooks.on('setup', () => {
 
 
 	libWrapper.register(MODULE_ID, 'Drawing.prototype._onUpdate', function(wrapped, ...args) {
-		let data = args[0];
+		const data = args[0];
 
 		// if flags were touched, touch 'type' to force a redraw
 		if(data.flags && data.flags[MODULE_ID])
