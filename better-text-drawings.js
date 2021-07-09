@@ -50,9 +50,14 @@ Hooks.on('setup', () => {
 		// Get values
 		let values = getTextOptions(data.object);
 
+		//resize window
+		let thisAppID=app.appId;
+		let newwheight=$('#drawing-config[data-appid="'+app.appId+'"]').height()+70;
+		$('#drawing-config[data-appid="'+app.appId+'"]').height(newwheight);
+
 		// Make textInput a text area
 		let textInput = html.find('input[name="text"]');
-		let textArea = $('<textarea name="text" data-dtype="String"></textarea>');
+		let textArea = $('<textarea name="text" data-dtype="String" rows="4"></textarea>');
 
 		textArea.val(data.object.text);
 		textInput.replaceWith(textArea);
