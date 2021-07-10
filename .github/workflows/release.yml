@@ -80,6 +80,7 @@ jobs:
           mkdir -p "dist"
           cp *.md "LICENSE" dist/
           [[ -d "templates" ]] && cp -r templates dist/templates
+          cp *.js dist/
 
           MANIFEST_EDITS=()
           function add_manifest_edit {

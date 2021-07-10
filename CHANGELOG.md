@@ -1,3 +1,8 @@
+# 1.1.0.1 (2021-07-10)
+
+- No code changes.
+- Fix release workflow not including `*.js` files.
+
 # 1.1.0.0 (2021-07-09)
 
 - Enlarge the text area and Drawing Config window slightly.
