@@ -1,3 +1,12 @@
+# 1.1.2.0 (2022-09-19)
+
+- Update libWrapper shim to latest version.
+- Announce this module as being unmaintained.
+  - It has been superseded by other modules such as [Advanced Drawing Tools](https://github.com/dev7355608/advanced-drawing-tools).
+  - Disable all functionality in Foundry v10, and warn user there is no support.
+  - Update README to state this module is unmaintained.
+
+
 # 1.1.1.0 (2021-12-13)
 
 - Update libWrapper shim to latest version.

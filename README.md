@@ -1,6 +1,8 @@
 # FVTT Better Text Drawings
 Module for Foundry VTT that adds more options to text drawings, allowing multi-line text as well as configurable stroke width, color, and text alignment.
 
+⚠ This module is unmaintained, and there are no plans to update it to support Foundry v10 or newer. It has been superseded by other modules such as [Advanced Drawing Tools](https://github.com/dev7355608/advanced-drawing-tools).
+
 [![License](https://img.shields.io/github/license/ruipin/fvtt-better-text-drawings)](LICENSE)
 [![Build Release](https://github.com/ruipin/fvtt-better-text-drawings/workflows/Build%20Release/badge.svg)](https://github.com/ruipin/fvtt-better-text-drawings/releases/latest)
 [![Version (latest)](https://img.shields.io/github/v/release/ruipin/fvtt-better-text-drawings)](https://github.com/ruipin/fvtt-better-text-drawings/releases/latest)

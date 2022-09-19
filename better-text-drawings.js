@@ -12,6 +12,20 @@ Hooks.on('setup', () => {
 	const DEFAULT_STROKE_COLOR = '#111111';
 	const DEFAULT_STROKE_WIDTH = 1;
 
+	if(game.data?.release?.generation && game.data.release.generation >= 10) {
+		const MESSAGE = `
+			<p>'${MODULE_NAME}' is no longer supported in Foundry v10 or newer, and there are no plans to update it as it has been superseded by other modules such as <a href="https://foundryvtt.com/packages/advanced-drawing-tools">Advanced Drawing Tools</a>.</p>
+			<p><b>As a result, its functionality will be disabled.</b> If you do not plan on going back to Foundry v9 or older, you should consider uninstalling it.</p>
+		`;
+		new Dialog({
+			title: MODULE_NAME,
+			content: MESSAGE, buttons: {
+				ok: { icon: '<i class="fas fa-check"></i>', label: 'Understood' }
+			}
+		}).render(true);
+		return;
+	}
+
 	console.log(`Loading ${MODULE_NAME} module...`);
 
 
